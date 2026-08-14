@@ -9,7 +9,7 @@
     "deploy": "wrangler deploy",
     "build": "npm run build:ts && npm run build:copy",
     "build:ts": "esbuild worker/src/index.ts --bundle --platform=neutral --target=es2022 --outfile=dist/index.js",
-    "build:copy": "mkdir -p dist && cp worker/src/index.html dist/index.html 2>/dev/null || true && cp worker/src/interactive.html dist/interactive.html 2>/dev/null || true && cp -r worker/public/* dist/ 2>/dev/null || true",
+    "build:copy": "mkdir -p dist && (cp src/index.html dist/index.html 2>/dev/null || cp worker/src/index.html dist/index.html 2>/dev/null || true) && (cp src/interactive.html dist/interactive.html 2>/dev/null || cp worker/src/interactive.html dist/interactive.html 2>/dev/null || true) && (cp -r public dist/public 2>/dev/null || cp -r worker/public dist/public 2>/dev/null || true)",
     "test": "vitest",
     "audit:fix": "npm audit fix --force",
     "lint": "echo 'Lint checks would go here'",
