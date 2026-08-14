@@ -1,0 +1,39 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #05060a;
+  color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#app {
+  border: 1px solid #333;
+  padding: 20px;
+  border-radius: 8px;
+  background: #0b0d12;
+  max-width: 480px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #3b82f6;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+pre {
+  margin-top: 12px;
+  background: #111827;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}

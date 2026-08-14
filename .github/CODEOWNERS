@@ -1,0 +1,15 @@
+# Portal-OS Code Owners
+# Assign automatic reviewers for changes in specific directories.
+
+* @Max
+kernel/ @Max
+identity/ @Max
+governance/ @Max
+routing/ @Max
+substrate/ @Max
+tec/ @Max
+suites/ @Max
+shell/ @Max
+sim/ @Max
+umbrella/ @Max
+docs/ @Max

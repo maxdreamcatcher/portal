@@ -1,0 +1,43 @@
+{
+  "name": "portal",
+  "version": "4.4.0",
+  "description": "Portal-OS v4.4 - Multi-domain operating substrate deployed on Cloudflare Workers",
+  "main": "worker/src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "npm run build:ts && npm run build:copy",
+    "build:ts": "esbuild worker/src/index.ts --bundle --platform=neutral --target=es2022 --outfile=dist/index.js",
+    "build:copy": "mkdir -p dist && cp worker/src/index.html dist/index.html 2>/dev/null || true && cp worker/src/interactive.html dist/interactive.html 2>/dev/null || true && cp -r worker/public/* dist/ 2>/dev/null || true",
+    "test": "vitest",
+    "audit:fix": "npm audit fix --force",
+    "lint": "echo 'Lint checks would go here'",
+    "pretest": "npm run build"
+  },
+  "keywords": [
+    "portal-os",
+    "cloudflare",
+    "workers",
+    "substrate",
+    "orchestration",
+    "multi-domain"
+  ],
+  "author": "maxjurreau",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.18.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "@jridgewell/sourcemap-codec": "^1.5.5",
+    "@rollup/plugin-inject": "^5.0.5",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.6.0",
+    "wrangler": "^4.3.0",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "hono": "^4.0.0"
+  }
+}

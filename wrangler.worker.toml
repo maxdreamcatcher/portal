@@ -1,0 +1,48 @@
+name = "portal-os-v1"
+compatibility_date = "2026-08-12"
+main = "src/index.ts"
+
+[build]
+command = "npm run build"
+
+[worker]
+main = "dist/worker.js"
+
+# KV namespace binding (SUBSTRATE_KV is required)
+[[kv_namespaces]]
+binding = "SUBSTRATE_KV"
+id = "807456cb41558d3c820308b20affa851"
+
+# Optional second KV namespace (you must replace this ID)
+[[kv_namespaces]]
+binding = "RUNTIME_KV"
+id = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+
+# Durable Object binding
+[durable_objects]
+bindings = [
+  { name = "SUBSTRATE_DO", class_name = "SubstrateDO" }
+]
+
+# Durable Object migrations
+[[migrations]]
+tag = "v1"
+new_classes = [ "SubstrateDO" ]
+
+# Production environment override
+[env.production]
+name = "portal-os-v1-prod"
+
+# Production KV namespaces
+[[env.production.kv_namespaces]]
+binding = "SUBSTRATE_KV"
+id = "807456cb41558d3c820308b20affa851"
+
+[[env.production.kv_namespaces]]
+binding = "RUNTIME_KV"
+id = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+
+[env.production.durable_objects]
+bindings = [
+  { name = "SUBSTRATE_DO", class_name = "SubstrateDO" }
+]
