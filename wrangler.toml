@@ -2,8 +2,9 @@ name = "portal"
 compatibility_date = "2026-08-14"
 main = "dist/index.js"
 
-# Route binding so the Worker + site are served on the workers.dev subdomain
-routes = ["portal.max-reamcatcher2.workers.dev/*"]
+# Enable workers.dev publishing and preview URLs
+workers_dev = true
+preview_urls = true
 
 [build]
 command = "npm run build"
