@@ -123,28 +123,40 @@ app.onError((err, c) => {
 
 // Serve static assets and SPA fallback using Wrangler Sites ASSETS binding
 app.get('*', async (c) => {
-  // If ASSETS binding is available, try to serve the requested asset.
-  // If the asset is not found (404) or ASSETS is not available, fall back to index.html.
+  // Try known asset binding names Wrangler might expose.
+  const bindings = (c.env as any) || {};
+  const assetsCandidates = [
+    bindings.ASSETS,
+    bindings.__STATIC_CONTENT,
+    bindings.__STATIC_CONTENT_MANIFEST,
+    bindings['__STATIC_CONTENT']
+  ].filter(Boolean);
+
+  // Try each available binding to fetch the asset
+  for (const binding of assetsCandidates) {
+    try {
+      const res = await binding.fetch(c.req);
+      if (res && res.status !== 404) return res;
+    } catch (err) {
+      // ignore and try next
+      console.warn('Asset binding fetch failed, trying next binding', err);
+    }
+  }
+
+  // SPA fallback: explicitly request index.html from the primary binding if possible
   try {
-    if (c.env.ASSETS) {
-      const assetResponse = await c.env.ASSETS.fetch(c.req);
-      if (assetResponse && assetResponse.status !== 404) {
-        return assetResponse;
-      }
+    const url = new URL(c.req.url);
+    const indexReq = new Request(new URL('/index.html', url).toString(), c.req);
+    const primary = assetsCandidates[0];
+    if (primary) {
+      const idx = await primary.fetch(indexReq);
+      if (idx && idx.status !== 404) return idx;
     }
   } catch (e) {
-    // Ignore and fall through to index.html fallback
-    console.warn('ASSETS fetch failed, falling back to index.html', e);
+    console.warn('Index fallback fetch failed', e);
   }
 
-  // Fallback to index.html for SPA routes
-  const url = new URL(c.req.url);
-  const indexReq = new Request(new URL('/index.html', url).toString(), c.req);
-  if (c.env.ASSETS) {
-    return c.env.ASSETS.fetch(indexReq);
-  }
-
-  // If ASSETS isn't available, return a simple 404 JSON to avoid a blank response
+  // If no asset binding is present or all attempts failed, return JSON 404 to avoid empty responses
   return c.json({ error: 'Not Found' }, 404);
 });
 
