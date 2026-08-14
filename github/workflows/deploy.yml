@@ -2,22 +2,21 @@ name: Deploy to Cloudflare Workers
 
 on:
   push:
-    branches:
-      - main
-      - fix/wrangler-build-and-site
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js 24
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -25,7 +24,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to Cloudflare
+      - name: Deploy to Cloudflare Workers
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
