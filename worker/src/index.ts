@@ -128,6 +128,7 @@ app.get('*', async (c) => {
   const assetsCandidates = [
     bindings.ASSETS,
     bindings.__STATIC_CONTENT,
+    bindings.__STATIC_CONTENT_ASSETS,
     bindings.__STATIC_CONTENT_MANIFEST,
     bindings['__STATIC_CONTENT']
   ].filter(Boolean);
