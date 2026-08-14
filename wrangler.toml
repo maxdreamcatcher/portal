@@ -5,6 +5,9 @@ main = "dist/index.js"
 [build]
 command = "npm run build"
 
+[site]
+bucket = "dist"
+
 # KV namespace binding (SUBSTRATE_KV is required)
 [[kv_namespaces]]
 binding = "SUBSTRATE_KV"
