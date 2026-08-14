@@ -28,6 +28,9 @@ new_sqlite_classes = ["SubstrateDO"]
 [env.production]
 name = "portal-os-v4-4-prod"
 
+[env.production.site]
+bucket = "dist"
+
 [env.production.durable_objects]
 bindings = [
   { name = "SUBSTRATE_DO", class_name = "SubstrateDO" }
