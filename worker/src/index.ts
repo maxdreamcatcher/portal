@@ -28,6 +28,8 @@ export const __EXPORTED_SUBSTRATE_DO = SubstrateDO;
 export interface Env {
   KERNEL_URL: string;
   SUBSTRATE: DurableObjectNamespace;
+  // ASSETS is added so the Worker can serve static assets uploaded by Wrangler Sites
+  ASSETS?: any;
 }
 
 const app = new Hono<{ Bindings: Env }>();
@@ -117,6 +119,33 @@ app.onError((err, c) => {
     },
     500
   );
+});
+
+// Serve static assets and SPA fallback using Wrangler Sites ASSETS binding
+app.get('*', async (c) => {
+  // If ASSETS binding is available, try to serve the requested asset.
+  // If the asset is not found (404) or ASSETS is not available, fall back to index.html.
+  try {
+    if (c.env.ASSETS) {
+      const assetResponse = await c.env.ASSETS.fetch(c.req);
+      if (assetResponse && assetResponse.status !== 404) {
+        return assetResponse;
+      }
+    }
+  } catch (e) {
+    // Ignore and fall through to index.html fallback
+    console.warn('ASSETS fetch failed, falling back to index.html', e);
+  }
+
+  // Fallback to index.html for SPA routes
+  const url = new URL(c.req.url);
+  const indexReq = new Request(new URL('/index.html', url).toString(), c.req);
+  if (c.env.ASSETS) {
+    return c.env.ASSETS.fetch(indexReq);
+  }
+
+  // If ASSETS isn't available, return a simple 404 JSON to avoid a blank response
+  return c.json({ error: 'Not Found' }, 404);
 });
 
 // Export Worker
